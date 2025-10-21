@@ -32,12 +32,6 @@ namespace ShopStack99
             }
         }
 
-        private void OnEnable()
-        {
-            TryPatch();
-            TrySetConfig();
-        }
-
         private void OnDisable()
         {
             if (ModConfigAPI.IsAvailable())
@@ -178,6 +172,7 @@ namespace ShopStack99
                     Log("[99ShopStack] Harmony patch 已卸载");
                 }
                 patched = false;
+                updateReady = false;
             }
             catch (Exception ex)
             {
@@ -226,10 +221,7 @@ namespace ShopStack99
             if (GUI.Button(new Rect(10, 25, 230, 30), patched ? "重新启动" : "启用补丁"))
             {
                 if (patched)
-                {
                     TryUnpatch();
-                    updateReady = false;
-                }
                 else
                     TryPatch();
             }
