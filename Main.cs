@@ -9,6 +9,7 @@ namespace ShopStack99
 {
     public class ModBehaviour : Duckov.Modding.ModBehaviour
     {
+        private static readonly bool ShowLog = false;
         private bool updateReady = false;
         private bool ModConfigReday = false;
         private object harmonyInstance;
@@ -27,7 +28,7 @@ namespace ShopStack99
             if (Input.GetKeyDown(KeyCode.Home))
             {
                 showUI = !showUI;
-                Debug.Log($"[99ShopStack] 控制面板 {(showUI ? "打开" : "关闭")}");
+                Log($"[99ShopStack] 控制面板 {(showUI ? "打开" : "关闭")}");
             }
         }
 
@@ -42,10 +43,10 @@ namespace ShopStack99
             if (ModConfigAPI.IsAvailable())
             {
                 ModConfigAPI.SafeRemoveOnOptionsChangedDelegate(OnOptionChanged);
-                Debug.Log("[99ShopStack] 已移除 ModConfig 事件委托");
+                Log("[99ShopStack] 已移除 ModConfig 事件委托");
 
                 ModConfigAPI.SafeSave("ShopStack99", "RestockAmount", restockAmount);
-                Debug.Log($"[99ShopStack] 已保存配置：RestockAmount = {restockAmount}");
+                Log($"[99ShopStack] 已保存配置：RestockAmount = {restockAmount}");
             }
 
             TryUnpatch();
@@ -56,6 +57,30 @@ namespace ShopStack99
             showUI = false;
         }
 
+        private static void Log(string word)
+        {
+            if (ShowLog)
+            {
+                Debug.Log(word);
+            }
+        }
+
+        private static void LogWarning(string word)
+        {
+            if (ShowLog)
+            {
+                Debug.LogWarning(word);
+            }
+        }
+
+        private static void LogError(string word)
+        {
+            if (ShowLog)
+            {
+                Debug.LogError(word);
+            }
+        }
+
         private void TrySetConfig()
         {
             if (ModConfigAPI.IsAvailable())
@@ -64,7 +89,7 @@ namespace ShopStack99
                     return;
 
                 ModConfigAPI.Initialize();
-                Debug.Log("[99ShopStack] 检测到 ModConfig，正在注册配置项...");
+                Log("[99ShopStack] 检测到 ModConfig，正在注册配置项...");
 
                 ModConfigAPI.SafeAddInputWithSlider(
                     "ShopStack99",
@@ -78,12 +103,12 @@ namespace ShopStack99
                 ModConfigAPI.SafeAddOnOptionsChangedDelegate(OnOptionChanged);
 
                 restockAmount = ModConfigAPI.SafeLoad("ShopStack99", "RestockAmount", 99);
-                Debug.Log($"[99ShopStack] 当前补货数量设定为 {restockAmount}");
+                Log($"[99ShopStack] 当前补货数量设定为 {restockAmount}");
                 ModConfigReday = true;
             }
             else
             {
-                Debug.LogWarning("[99ShopStack] 未检测到 ModConfig，将使用默认值 99");
+                LogWarning("[99ShopStack] 未检测到 ModConfig，将使用默认值 99");
                 ModConfigReday = true;
             }
         }
@@ -99,7 +124,7 @@ namespace ShopStack99
                 harmonyMethodType = Type.GetType("HarmonyLib.HarmonyMethod, 0Harmony");
                 if (harmonyType == null || harmonyMethodType == null)
                 {
-                    Debug.LogError("[99ShopStack] 未找到 Harmony 类型或 HarmonyMethod 类型！");
+                    LogError("[99ShopStack] 未找到 Harmony 类型或 HarmonyMethod 类型！");
                     return;
                 }
 
@@ -111,7 +136,7 @@ namespace ShopStack99
 
                 if (target == null)
                 {
-                    Debug.LogError("[99ShopStack] 找不到 StockShop.DoRefreshStock");
+                    LogError("[99ShopStack] 找不到 StockShop.DoRefreshStock");
                     return;
                 }
 
@@ -131,13 +156,13 @@ namespace ShopStack99
 
                 patch.Invoke(harmonyInstance, new object[] { target, null, postfixHM, null, null });
 
-                Debug.Log("[99ShopStack] 启动完成");
+                Log("[99ShopStack] 启动完成");
                 patched = true;
                 updateReady = true;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[99ShopStack] Patch 失败: {ex}");
+                LogError($"[99ShopStack] Patch 失败: {ex}");
                 patched = false;
             }
         }
@@ -150,13 +175,13 @@ namespace ShopStack99
                 {
                     harmonyType.GetMethod("UnpatchAll", new[] { typeof(string) })
                         .Invoke(harmonyInstance, new object[] { "com.hgxy.99ShopStack" });
-                    Debug.Log("[99ShopStack] Harmony patch 已卸载");
+                    Log("[99ShopStack] Harmony patch 已卸载");
                 }
                 patched = false;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[99ShopStack] 卸载 Harmony 失败: {ex}");
+                LogError($"[99ShopStack] 卸载 Harmony 失败: {ex}");
             }
         }
 
@@ -165,7 +190,7 @@ namespace ShopStack99
             if (key == $"{"ShopStack99"}_RestockAmount")
             {
                 restockAmount = ModConfigAPI.SafeLoad("ShopStack99", "RestockAmount", 99);
-                Debug.Log($"[99ShopStack] 补货数量更新为 {restockAmount}");
+                Log($"[99ShopStack] 补货数量更新为 {restockAmount}");
 
                 ForceRefreshAllShops();
             }
@@ -184,11 +209,11 @@ namespace ShopStack99
                     method?.Invoke(shop, null);
                     count++;
                 }
-                Debug.Log($"[99ShopStack] 已强制刷新所有商店（共 {count} 个）");
+                Log($"[99ShopStack] 已强制刷新所有商店（共 {count} 个）");
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[99ShopStack] 强制刷新商店失败: {ex}");
+                LogError($"[99ShopStack] 强制刷新商店失败: {ex}");
             }
         }
 
@@ -228,7 +253,7 @@ namespace ShopStack99
                 e.CurrentStock = amount;
             }
 
-            Debug.Log($"[99ShopStack] 商店 {__instance.MerchantID} 已补货至 99 件");
+            Log($"[99ShopStack] 商店 {__instance.MerchantID} 已补货至 99 件");
         }
     }
 }
