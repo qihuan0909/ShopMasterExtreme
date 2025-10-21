@@ -9,7 +9,7 @@ namespace ShopStack99
 {
     public class ModBehaviour : Duckov.Modding.ModBehaviour
     {
-        private readonly bool ShowLog = false;
+        private static readonly bool ShowLog = false;
         private bool updateReady = false;
         private bool ModConfigReday = false;
         private object harmonyInstance;
@@ -57,7 +57,7 @@ namespace ShopStack99
             showUI = false;
         }
 
-        private void Log(string word)
+        private static void Log(string word)
         {
             if (ShowLog)
             {
@@ -65,7 +65,7 @@ namespace ShopStack99
             }
         }
 
-        private void LogWarning(string word)
+        private static void LogWarning(string word)
         {
             if (ShowLog)
             {
@@ -73,7 +73,7 @@ namespace ShopStack99
             }
         }
 
-        private void LogError(string word)
+        private static void LogError(string word)
         {
             if (ShowLog)
             {
@@ -253,8 +253,7 @@ namespace ShopStack99
                 e.CurrentStock = amount;
             }
 
-            ModBehaviour mod = new ModBehaviour();
-            mod.Log($"[99ShopStack] 商店 {__instance.MerchantID} 已补货至 99 件");
+            Log($"[99ShopStack] 商店 {__instance.MerchantID} 已补货至 99 件");
         }
     }
 }
