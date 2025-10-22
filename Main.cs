@@ -11,9 +11,12 @@ namespace ShopStack99
         private static readonly bool ShowLog = true;
         private bool updateReady = false;
         private bool ModConfigReday = false;
+        private bool waitingForKey = false;
         private object harmonyInstance;
         private Type harmonyType;
         private Type harmonyMethodType;
+        private static string configPath;
+        private static KeyCode keyCode;
 
         private bool patched = false;
         private static bool showUI = false;
@@ -24,7 +27,7 @@ namespace ShopStack99
             TryPatch();
             TrySetConfig();
 
-            if (Input.GetKeyDown(KeyCode.Home))
+            if (Input.GetKeyDown(keyCode))
             {
                 showUI = !showUI;
                 Log($"[99ShopStack] 控制面板 {(showUI ? "打开" : "关闭")}");
@@ -71,6 +74,57 @@ namespace ShopStack99
             if (ShowLog)
             {
                 Debug.LogError(word);
+            }
+        }
+
+        private void Start()
+        {
+            string dllDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            configPath = System.IO.Path.Combine(dllDir, "Config.ini");
+
+            if (System.IO.File.Exists(configPath))
+            {
+                try
+                {
+                    string[] lines = System.IO.File.ReadAllLines(configPath);
+                    foreach (string line in lines)
+                    {
+                        if (line.StartsWith("ToggleKey=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string keyName = line.Substring("ToggleKey=".Length).Trim();
+                            if (Enum.TryParse(keyName, out KeyCode parsed))
+                                keyCode = parsed;
+                            else
+                                keyCode = KeyCode.Home;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogError($"[99ShopStack] 读取 Config.ini 出错: {ex}");
+                    keyCode = KeyCode.Home;
+                }
+            }
+            else
+            {
+                keyCode = KeyCode.Home;
+                SaveConfig(); // 没文件就写个默认
+            }
+
+            Log($"[99ShopStack] 当前控制面板热键为: {keyCode}");
+        }
+
+        private static void SaveConfig()
+        {
+            try
+            {
+                string content = $"# ShopStack99 Configuration\nToggleKey={keyCode}\n";
+                System.IO.File.WriteAllText(configPath, content);
+                Log($"[99ShopStack] 已保存 Config.ini：{keyCode}");
+            }
+            catch (Exception ex)
+            {
+                LogError($"[99ShopStack] 写入 Config.ini 出错: {ex}");
             }
         }
 
@@ -228,6 +282,27 @@ namespace ShopStack99
             if (GUI.Button(new Rect(10, 70, 230, 30), "强制刷新所有商店"))
             {
                 ForceRefreshAllShops();
+            }
+
+            GUI.Label(new Rect(10, 120, 230, 25), $"当前热键: {keyCode}");
+            if (GUI.Button(new Rect(10, 150, 230, 30), "修改热键"))
+            {
+                waitingForKey = true;
+                Log("[99ShopStack] 请按下要绑定的新键...");
+            }
+
+            if (waitingForKey)
+            {
+                GUI.Label(new Rect(10, 190, 230, 25), "请按任意键以绑定...");
+                Event e = Event.current;
+                if (e.isKey)
+                {
+                    keyCode = e.keyCode;
+                    waitingForKey = false;
+                    Log($"[99ShopStack] 新热键绑定为: {keyCode}");
+
+                    SaveConfig();
+                }
             }
 
             GUI.EndGroup();
