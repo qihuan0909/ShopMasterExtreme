@@ -2,7 +2,7 @@
 using System.Reflection;
 using Duckov.Economy;
 using UnityEngine;
-using ReplaceThisWithYourModNameSpace;
+using ShopStack99sModConfig;
 
 namespace ShopStack99
 {
@@ -108,7 +108,7 @@ namespace ShopStack99
             else
             {
                 keyCode = KeyCode.Home;
-                SaveConfig(); // 没文件就写个默认
+                SaveConfig();
             }
 
             Log($"[99ShopStack] 当前控制面板热键为: {keyCode}");
@@ -301,7 +301,7 @@ namespace ShopStack99
                     waitingForKey = false;
                     Log($"[99ShopStack] 新热键绑定为: {keyCode}");
 
-                    SaveConfig();
+                    SaveConfig(); 
                 }
             }
 
