@@ -9,6 +9,12 @@
   <ItemGroup>
         <Reference Include="$(DuckovPath)\Duckov_Data\Managed\TeamSoda.*" />
         <Reference Include="$(DuckovPath)\Duckov_Data\Managed\ItemStatsSystem.dll" />
+        <Reference Include="FMODUnity">
+          <HintPath>..\..\..\SteamLibrary\steamapps\common\Escape from Duckov\Duckov_Data\Managed\FMODUnity.dll</HintPath>
+        </Reference>
+        <Reference Include="UniTask">
+          <HintPath>..\..\..\SteamLibrary\steamapps\common\Escape from Duckov\Duckov_Data\Managed\UniTask.dll</HintPath>
+        </Reference>
         <Reference Include="$(DuckovPath)\Duckov_Data\Managed\Unity*" />
   </ItemGroup> 
 </Project>

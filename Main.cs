@@ -2,13 +2,15 @@
 using System.Reflection;
 using Duckov.Economy;
 using UnityEngine;
-using ShopStack99sModConfig;
+using ShopMasterExtremesModConfig;
+using TMPro;
+using UnityEngine.UI;
+using Duckov.Economy.UI;
 
-namespace ShopStack99
+namespace ShopMasterExtreme
 {
     public class ModBehaviour : Duckov.Modding.ModBehaviour
     {
-        private static bool ShowLog = false;
         private static bool showAllItems = false;
         private bool updateReady = false;
         private bool ModConfigReday = false;
@@ -31,7 +33,7 @@ namespace ShopStack99
             if (Input.GetKeyDown(keyCode))
             {
                 showUI = !showUI;
-                Log($"[99ShopStack] 控制面板 {(showUI ? "打开" : "关闭")}");
+                Loger.Log($"[ShopMasterExtreme] 控制面板 {(showUI ? "打开" : "关闭")}");
             }
         }
 
@@ -40,10 +42,10 @@ namespace ShopStack99
             if (ModConfigAPI.IsAvailable())
             {
                 ModConfigAPI.SafeRemoveOnOptionsChangedDelegate(OnOptionChanged);
-                Log("[99ShopStack] 已移除 ModConfig 事件委托");
+                Loger.Log("[ShopMasterExtreme] 已移除 ModConfig 事件委托");
 
-                ModConfigAPI.SafeSave("ShopStack99", "RestockAmount", restockAmount);
-                Log($"[99ShopStack] 已保存配置：RestockAmount = {restockAmount}");
+                ModConfigAPI.SafeSave("ShopMasterExtreme", "RestockAmount", restockAmount);
+                Loger.Log($"[ShopMasterExtreme] 已保存配置：RestockAmount = {restockAmount}");
             }
 
             TryUnpatch();
@@ -52,30 +54,6 @@ namespace ShopStack99
             ModConfigReday = false;
             patched = false;
             showUI = false;
-        }
-
-        private static void Log(string word)
-        {
-            if (ShowLog)
-            {
-                Debug.Log(word);
-            }
-        }
-
-        private static void LogWarning(string word)
-        {
-            if (ShowLog)
-            {
-                Debug.LogWarning(word);
-            }
-        }
-
-        private static void LogError(string word)
-        {
-            if (ShowLog)
-            {
-                Debug.LogError(word);
-            }
         }
 
         private void Start()
@@ -98,9 +76,9 @@ namespace ShopStack99
                             else
                                 keyCode = KeyCode.Home;
                         }
-                        else if (line.StartsWith("ShowLog=", StringComparison.OrdinalIgnoreCase))
+                        else if (line.StartsWith("Loger.ShowLog=", StringComparison.OrdinalIgnoreCase))
                         {
-                            bool.TryParse(line.Substring("ShowLog=".Length).Trim(), out ShowLog);
+                            bool.TryParse(line.Substring("Loger.ShowLog=".Length).Trim(), out Loger.ShowLog);
                         }
                         else if (line.StartsWith("ShowAllItems=", StringComparison.OrdinalIgnoreCase))
                         {
@@ -110,7 +88,7 @@ namespace ShopStack99
                 }
                 catch (Exception ex)
                 {
-                    LogError($"[99ShopStack] 读取 Config.ini 出错: {ex}");
+                    Loger.LogError($"[ShopMasterExtreme] 读取 Config.ini 出错: {ex}");
                     keyCode = KeyCode.Home;
                 }
             }
@@ -120,23 +98,23 @@ namespace ShopStack99
                 SaveConfig();
             }
 
-            Log($"[99ShopStack] 当前控制面板热键为: {keyCode}");
+            Loger.Log($"[ShopMasterExtreme] 当前控制面板热键为: {keyCode}");
         }
 
         private static void SaveConfig()
         {
             try
             {
-                string content = $"# ShopStack99 Configuration\n" +
+                string content = $"# ShopMasterExtreme Configuration\n" +
                                  $"ToggleKey={keyCode}\n" +
-                                 $"ShowLog={ShowLog}\n" +
+                                 $"Loger.ShowLog={Loger.ShowLog}\n" +
                                  $"ShowAllItems={showAllItems}\n";
                 System.IO.File.WriteAllText(configPath, content);
-                Log($"[99ShopStack] 已保存 Config.ini：{keyCode}, ShowLog={ShowLog}, ShowAllItems={showAllItems}");
+                Loger.Log($"[ShopMasterExtreme] 已保存 Config.ini：{keyCode}, ShowLog={Loger.ShowLog}, ShowAllItems={showAllItems}");
             }
             catch (Exception ex)
             {
-                LogError($"[99ShopStack] 写入 Config.ini 出错: {ex}");
+                Loger.LogError($"[ShopMasterExtreme] 写入 Config.ini 出错: {ex}");
             }
         }
 
@@ -148,10 +126,10 @@ namespace ShopStack99
                     return;
 
                 ModConfigAPI.Initialize();
-                Log("[99ShopStack] 检测到 ModConfig，正在注册配置项...");
+                Loger.Log("[ShopMasterExtreme] 检测到 ModConfig，正在注册配置项...");
 
                 ModConfigAPI.SafeAddInputWithSlider(
-                    "ShopStack99",
+                    "ShopMasterExtreme",
                     "RestockAmount",
                     "每次补货数量",
                     typeof(int),
@@ -161,13 +139,13 @@ namespace ShopStack99
 
                 ModConfigAPI.SafeAddOnOptionsChangedDelegate(OnOptionChanged);
 
-                restockAmount = ModConfigAPI.SafeLoad("ShopStack99", "RestockAmount", 99);
-                Log($"[99ShopStack] 当前补货数量设定为 {restockAmount}");
+                restockAmount = ModConfigAPI.SafeLoad("ShopMasterExtreme", "RestockAmount", 99);
+                Loger.Log($"[ShopMasterExtreme] 当前补货数量设定为 {restockAmount}");
                 ModConfigReday = true;
             }
             else
             {
-                LogWarning("[99ShopStack] 未检测到 ModConfig，将使用默认值 99");
+                Loger.LogWarning("[ShopMasterExtreme] 未检测到 ModConfig，将使用默认值 99");
                 ModConfigReday = true;
             }
         }
@@ -183,11 +161,11 @@ namespace ShopStack99
                 harmonyMethodType = Type.GetType("HarmonyLib.HarmonyMethod, 0Harmony");
                 if (harmonyType == null || harmonyMethodType == null)
                 {
-                    LogError("[99ShopStack] 未找到 Harmony 类型或 HarmonyMethod 类型！");
+                    Loger.LogError("[ShopMasterExtreme] 未找到 Harmony 类型或 HarmonyMethod 类型！");
                     return;
                 }
 
-                harmonyInstance = Activator.CreateInstance(harmonyType, "com.hgxy.99ShopStack");
+                harmonyInstance = Activator.CreateInstance(harmonyType, "com.hgxy.ShopMasterExtreme");
 
                 var target = typeof(StockShop).GetMethod(
                     "DoRefreshStock",
@@ -195,7 +173,7 @@ namespace ShopStack99
 
                 if (target == null)
                 {
-                    LogError("[99ShopStack] 找不到 StockShop.DoRefreshStock");
+                    Loger.LogError("[ShopMasterExtreme] 找不到 StockShop.DoRefreshStock");
                     return;
                 }
 
@@ -215,13 +193,15 @@ namespace ShopStack99
 
                 patch.Invoke(harmonyInstance, new object[] { target, null, postfixHM, null, null });
 
-                Log("[99ShopStack] 启动完成");
+                BulkPurchase.ApplyPatches(harmonyInstance, harmonyType, harmonyMethodType);
+
+                Loger.Log("[ShopMasterExtreme] 启动完成");
                 patched = true;
                 updateReady = true;
             }
             catch (Exception ex)
             {
-                LogError($"[99ShopStack] Patch 失败: {ex}");
+                Loger.LogError($"[ShopMasterExtreme] Patch 失败: {ex}");
                 patched = false;
             }
         }
@@ -233,24 +213,25 @@ namespace ShopStack99
                 if (harmonyInstance != null)
                 {
                     harmonyType.GetMethod("UnpatchAll", new[] { typeof(string) })
-                        .Invoke(harmonyInstance, new object[] { "com.hgxy.99ShopStack" });
-                    Log("[99ShopStack] Harmony patch 已卸载");
+                        .Invoke(harmonyInstance, new object[] { "com.hgxy.ShopMasterExtreme" });
+                    Loger.Log("[ShopMasterExtreme] Harmony patch 已卸载");
                 }
+                GameObject.Destroy(BulkPurchase.myInputField.gameObject);
                 patched = false;
                 updateReady = false;
             }
             catch (Exception ex)
             {
-                LogError($"[99ShopStack] 卸载 Harmony 失败: {ex}");
+                Loger.LogError($"[ShopMasterExtreme] 卸载 Harmony 失败: {ex}");
             }
         }
 
         private void OnOptionChanged(string key)
         {
-            if (key == $"{"ShopStack99"}_RestockAmount")
+            if (key == $"{"ShopMasterExtreme"}_RestockAmount")
             {
-                restockAmount = ModConfigAPI.SafeLoad("ShopStack99", "RestockAmount", 99);
-                Log($"[99ShopStack] 补货数量更新为 {restockAmount}");
+                restockAmount = ModConfigAPI.SafeLoad("ShopMasterExtreme", "RestockAmount", 99);
+                Loger.Log($"[ShopMasterExtreme] 补货数量更新为 {restockAmount}");
                 ForceRefreshAllShops();
             }
         }
@@ -268,11 +249,11 @@ namespace ShopStack99
                     method?.Invoke(shop, null);
                     count++;
                 }
-                Log($"[99ShopStack] 已强制刷新所有商店（共 {count} 个）");
+                Loger.Log($"[ShopMasterExtreme] 已强制刷新所有商店（共 {count} 个）");
             }
             catch (Exception ex)
             {
-                LogError($"[99ShopStack] 强制刷新商店失败: {ex}");
+                Loger.LogError($"[ShopMasterExtreme] 强制刷新商店失败: {ex}");
             }
         }
 
@@ -280,9 +261,9 @@ namespace ShopStack99
         {
             if (!showUI) return;
 
-            GUI.BeginGroup(new Rect(20, 20, 280, 380), "[99ShopStack 控制面板]", GUI.skin.window);
+            GUI.BeginGroup(new Rect(20, 20, 280, 380), "[ShopMasterExtreme 控制面板]", GUI.skin.window);
 
-            ShowLog = GUI.Toggle(new Rect(10, 25, 230, 25), ShowLog, "启用日志输出");
+            Loger.ShowLog = GUI.Toggle(new Rect(10, 25, 230, 25), Loger.ShowLog, "启用日志输出");
             showAllItems = GUI.Toggle(new Rect(10, 55, 230, 25), showAllItems, "显示所有商店物品（仅对部分商店有效）");
 
             if (GUI.Button(new Rect(10, 95, 230, 30), patched ? "重新启动" : "启用补丁"))
@@ -302,7 +283,7 @@ namespace ShopStack99
             if (GUI.Button(new Rect(10, 205, 230, 30), "修改热键"))
             {
                 waitingForKey = true;
-                Log("[99ShopStack] 请按下要绑定的新键...");
+                Loger.Log("[ShopMasterExtreme] 请按下要绑定的新键...");
             }
 
             if (waitingForKey)
@@ -313,7 +294,7 @@ namespace ShopStack99
                 {
                     keyCode = e.keyCode;
                     waitingForKey = false;
-                    Log($"[99ShopStack] 新热键绑定为: {keyCode}");
+                    Loger.Log($"[ShopMasterExtreme] 新热键绑定为: {keyCode}");
                     SaveConfig();
                 }
             }
@@ -329,7 +310,7 @@ namespace ShopStack99
         public static void AfterRefresh(StockShop __instance)
         {
             int amount = ModConfigAPI.IsAvailable()
-            ? ModConfigAPI.SafeLoad("ShopStack99", "RestockAmount", restockAmount)
+            ? ModConfigAPI.SafeLoad("ShopMasterExtreme", "RestockAmount", restockAmount)
             : restockAmount;
 
             foreach (var e in __instance.entries)
@@ -341,7 +322,7 @@ namespace ShopStack99
                 e.CurrentStock = amount;
             }
 
-            Log($"[99ShopStack] 商店 {__instance.MerchantID} 已补货至 {amount} 件 (显示所有物品: {showAllItems})");
+            Loger.Log($"[ShopMasterExtreme] 商店 {__instance.MerchantID} 已补货至 {amount} 件 (显示所有物品: {showAllItems})");
         }
     }
 }
