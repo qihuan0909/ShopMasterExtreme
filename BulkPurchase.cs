@@ -151,8 +151,25 @@ namespace ShopMasterExtreme
 
         private static void OnCustomBuyButtonClicked()
         {
-            if (activeShop == null || currentSelectionEntry == null || currentInputValue <= 0) return;
-            ExecuteBulkBuyAsync().Forget();
+            if (StockShopView.Instance == null) return;
+
+            var selection = StockShopView.Instance.GetSelection();
+
+            if (selection != null)
+            {
+                if (activeShop == null || currentSelectionEntry == null || currentInputValue <= 0) return;
+                ExecuteBulkBuyAsync().Forget();
+            }
+            else
+            {
+                MethodInfo method = typeof(StockShopView).GetMethod("OnInteractionButtonClicked",
+                    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+                if (method != null)
+                {
+                    method.Invoke(StockShopView.Instance, null);
+                }
+            }
         }
 
         private static async UniTaskVoid ExecuteBulkBuyAsync()
