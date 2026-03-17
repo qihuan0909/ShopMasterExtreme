@@ -104,6 +104,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] Current control panel hotkey: {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini saved: {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Error writing Config.ini: {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] Error while trying load ModConfig: {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] ModConfig detected, registering items...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] Restock amount set to {0}";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] Language changing to: {0}... Rebooting Module";
@@ -153,6 +154,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[商店终极功能拓展] 当前控制面板热键为: {0}";
             Lang["Log_ConfigWriteInfo"] = "[商店终极功能拓展] 已保存 Config.ini：{0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[商店终极功能拓展] 写入 Config.ini 出错: {0}";
+            Lang["Log_ModConfigLoadError"] = "[商店终极功能拓展] 在尝试读取ModConfig时出错: {0}";
             Lang["Log_RegisterConfig"] = "[商店终极功能拓展] 检测到 ModConfig，正在注册配置项...";
             Lang["Log_RestockAmount"] = "[商店终极功能拓展] 当前补货数量设定为 {0}";
             Lang["Log_ChangingLanguage"] = "[商店终极功能拓展] 语言切换至: {0}... 正在重启。";
@@ -202,6 +204,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] 現在のコントロールパネルのホットキー: {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini を保存しました: {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Config.ini の書き込みエラー: {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] ModConfigの読み込み中にエラーが発生しました: {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] ModConfig を検出しました。設定項目を登録中...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] 補充数を {0} に設定しました";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] 言語を {0} に変更中... モジュールを再起動しています";
@@ -251,6 +254,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] 현재 제어 패널 단축키: {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini 저장됨: {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Config.ini 쓰기 오류: {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] ModConfig를 불러오는 중 오류가 발생했습니다: {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] ModConfig 감지됨, 설정 항목 등록 중...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] 보충 수량이 {0}으로 설정되었습니다";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] 언어를 {0}(으)로 변경 중... 모듈을 재부팅하는 중";
@@ -300,6 +304,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] Aktueller Hotkey für Kontrollpanel: {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini gespeichert: {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Fehler beim Schreiben der Config.ini: {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] Fehler beim Laden der ModConfig: {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] ModConfig erkannt, registriere Elemente...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] Nachfüllmenge auf {0} gesetzt";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] Sprache wird auf {0} geändert... Modul wird neu gestartet";
@@ -349,6 +354,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] Raccourci actuel du panneau de contrôle : {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini enregistré : {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Erreur d'écriture de Config.ini : {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] Erreur lors du chargement de ModConfig : {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] ModConfig détecté, enregistrement des éléments...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] Quantité de réapprovisionnement fixée à {0}";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] Changement de langue vers : {0}... Redémarrage du module";
@@ -398,6 +404,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] Текущая клавиша панели управления: {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini сохранен: {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Ошибка записи Config.ini: {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] Ошибка при загрузке ModConfig: {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] Обнаружен ModConfig, регистрация элементов...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] Количество пополнения установлено на {0}";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] Смена языка на: {0}... Перезагрузка модуля";
@@ -447,6 +454,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] Tecla de acceso rápido actual: {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini guardado: {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Error al escribir Config.ini: {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] Error al intentar cargar ModConfig: {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] ModConfig detectado, registrando elementos...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] Cantidad de reabastecimiento establecida en {0}";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] Cambiando el idioma a: {0}... Reiniciando el módulo";
@@ -496,6 +504,7 @@ namespace ShopMasterExtreme
             Lang["Log_CurrentKeyInfo"] = "[ShopMasterExtreme] Tecla de atalho atual do painel: {0}";
             Lang["Log_ConfigWriteInfo"] = "[ShopMasterExtreme] Config.ini salvo: {0}, ShowLog={1}, ShowAllItems={2}";
             Lang["Log_ConfigWriteError"] = "[ShopMasterExtreme] Erro ao gravar Config.ini: {0}";
+            Lang["Log_ModConfigLoadError"] = "[ShopMasterExtreme] Erro ao tentar carregar ModConfig: {0}";
             Lang["Log_RegisterConfig"] = "[ShopMasterExtreme] ModConfig detectado, registrando itens...";
             Lang["Log_RestockAmount"] = "[ShopMasterExtreme] Quantidade de reestoque definida para {0}";
             Lang["Log_ChangingLanguage"] = "[ShopMasterExtreme] Alterando o idioma para: {0}... Reiniciando o módulo";

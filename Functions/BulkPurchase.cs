@@ -201,7 +201,7 @@ namespace ShopMasterExtreme.Functions
 
                 currentSelectionEntry.CurrentStock -= currentInputValue;
 
-                Item lastItem = null;
+                Item? lastItem = null;
                 for (int i = 0; i < currentInputValue; i++)
                 {
                     Item item = await ItemAssetsCollection.InstantiateAsync(currentSelectionEntry.ItemTypeID);
@@ -233,7 +233,7 @@ namespace ShopMasterExtreme.Functions
             }
             catch (Exception ex)
             {
-                Loger.LogError(string.Format(Localization.Lang["BulkPurchase7"]));
+                Loger.LogError(string.Format(Localization.Lang["BulkPurchase7"], ex));
             }
             finally
             {

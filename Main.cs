@@ -16,8 +16,6 @@ namespace ShopMasterExtreme
 
         private void Update()
         {
-            Miscellaneous.Harmony.TryPatch();
-            ModConfig.TrySetConfig();
             Miscellaneous.GUI.MonitorGUIToggle();
         }
 
@@ -27,7 +25,6 @@ namespace ShopMasterExtreme
             Miscellaneous.Harmony.TryUnpatch();
             Localization.TryUnloadLocallization();
 
-            Miscellaneous.Harmony.updateReady = false;
             ModConfig.ModConfigReday = false;
             Miscellaneous.Harmony.patched = false;
             Miscellaneous.GUI.showUI = false;
@@ -36,6 +33,8 @@ namespace ShopMasterExtreme
         private void Start()
         {
             Localization.TryLoadLocalization();
+            Miscellaneous.Harmony.TryPatch();
+            ModConfig.TrySetConfig();
             Config.TryLoadConfig();
         }
 

@@ -9,7 +9,6 @@ namespace ShopMasterExtreme.Miscellaneous
 {
     internal static class Harmony
     {
-        internal static bool updateReady = false;
         internal static bool patched = false;
         private static object harmonyInstance;
         private static Type harmonyType;
@@ -17,32 +16,32 @@ namespace ShopMasterExtreme.Miscellaneous
 
         internal static void TryPatch()
         {
-            if (updateReady)
-                return;
-
-            try
+            while (patched == false)
             {
-                harmonyType = Type.GetType("HarmonyLib.Harmony, 0Harmony");
-                harmonyMethodType = Type.GetType("HarmonyLib.HarmonyMethod, 0Harmony");
-                if (harmonyType == null || harmonyMethodType == null)
+                try
                 {
-                    Loger.LogError(string.Format(Localization.Lang["Log_HarmonyError"]));
-                    return;
+                    harmonyType = Type.GetType("HarmonyLib.Harmony, 0Harmony");
+                    harmonyMethodType = Type.GetType("HarmonyLib.HarmonyMethod, 0Harmony");
+                    if (harmonyType == null || harmonyMethodType == null)
+                    {
+                        Loger.LogError(string.Format(Localization.Lang["Log_HarmonyError"]));
+                        return;
+                    }
+
+                    harmonyInstance = Activator.CreateInstance(harmonyType, "com.hgxy.ShopMasterExtreme");
+
+                    ShopStackManager.ApplyPatches(harmonyInstance, harmonyType, harmonyMethodType);
+                    BulkPurchase.ApplyPatches(harmonyInstance, harmonyType, harmonyMethodType);
+
+                    Loger.Log(string.Format(Localization.Lang["Log_StartComplete"]));
+                    patched = true;
                 }
-
-                harmonyInstance = Activator.CreateInstance(harmonyType, "com.hgxy.ShopMasterExtreme");
-
-                ShopStackManager.ApplyPatches(harmonyInstance, harmonyType, harmonyMethodType);
-                BulkPurchase.ApplyPatches(harmonyInstance, harmonyType, harmonyMethodType);
-
-                Loger.Log(string.Format(Localization.Lang["Log_StartComplete"]));
-                patched = true;
-                updateReady = true;
-            }
-            catch (Exception ex)
-            {
-                Loger.LogError(string.Format(Localization.Lang["Log_PatchError"], ex));
-                patched = false;
+                catch (Exception ex)
+                {
+                    Loger.LogError(string.Format(Localization.Lang["Log_PatchError"], ex));
+                    patched = false;
+                    break;
+                }
             }
         }
 
@@ -56,9 +55,9 @@ namespace ShopMasterExtreme.Miscellaneous
                         .Invoke(harmonyInstance, new object[] { "com.hgxy.ShopMasterExtreme" });
                     Loger.Log(string.Format(Localization.Lang["Log_UnpatchSuccess"]));
                 }
-                GameObject.Destroy(BulkPurchase.myInputField.gameObject);
+                if (BulkPurchase.myInputField != null)
+                        GameObject.Destroy(BulkPurchase.myInputField.gameObject);
                 patched = false;
-                updateReady = false;
             }
             catch (Exception ex)
             {

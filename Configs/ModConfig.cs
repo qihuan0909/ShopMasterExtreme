@@ -1,5 +1,6 @@
 ﻿using ShopMasterExtreme.Functions;
 using ShopMasterExtremesModConfig;
+using System;
 using UnityEngine;
 
 namespace ShopMasterExtreme.Configs
@@ -26,36 +27,44 @@ namespace ShopMasterExtreme.Configs
         {
             if (ModConfigAPI.IsAvailable())
             {
-                if (ModConfigReday)
-                    return;
+                while (ModConfigReday == false)
+                {
+                    try
+                    {
+                        ModConfigAPI.Initialize();
+                        Loger.Log(string.Format(Localization.Lang["Log_RegisterConfig"]));
 
-                ModConfigAPI.Initialize();
-                Loger.Log(string.Format(Localization.Lang["Log_RegisterConfig"]));
+                        ModConfigAPI.SafeAddInputWithSlider(
+                            "ShopMasterExtreme",
+                            "RestockAmount",
+                            "Shop Stack Amount | 商店库存数量",
+                            typeof(int),
+                            ShopStackManager.restockAmount,
+                            new Vector2(1, 999)
+                        );
 
-                ModConfigAPI.SafeAddInputWithSlider(
-                    "ShopMasterExtreme",
-                    "RestockAmount",
-                    "Shop Stack Amount | 商店库存数量",
-                    typeof(int),
-                    ShopStackManager.restockAmount,
-                    new Vector2(1, 999)
-                );
+                        ModConfigAPI.SafeAddDropdownList(
+                            "ShopMasterExtreme",
+                            "Language",
+                            "Mod Language | 插件语言设置",
+                            langMenuOptions,
+                            typeof(string),
+                            "Auto"
+                        );
 
-                ModConfigAPI.SafeAddDropdownList(
-                    "ShopMasterExtreme",
-                    "Language",
-                    "Mod Language | 插件语言设置",
-                    langMenuOptions,
-                    typeof(string),
-                    "Auto"
-                );
+                        ModConfigAPI.SafeAddOnOptionsChangedDelegate(OnOptionChanged);
 
-                ModConfigAPI.SafeAddOnOptionsChangedDelegate(OnOptionChanged);
-
-                ShopStackManager.restockAmount = ModConfigAPI.SafeLoad("ShopMasterExtreme", "RestockAmount", 99);
-                Localization.ManualLanguage = ModConfigAPI.SafeLoad("ShopMasterExtreme", "Language", "Auto");
-                Loger.Log(string.Format(Localization.Lang["Log_RestockAmount"], ShopStackManager.restockAmount));
-                ModConfigReday = true;
+                        ShopStackManager.restockAmount = ModConfigAPI.SafeLoad("ShopMasterExtreme", "RestockAmount", 99);
+                        Localization.ManualLanguage = ModConfigAPI.SafeLoad("ShopMasterExtreme", "Language", "Auto");
+                        Loger.Log(string.Format(Localization.Lang["Log_RestockAmount"], ShopStackManager.restockAmount));
+                        ModConfigReday = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Loger.LogError(string.Format(Localization.Lang["Log_ModConfigLoadError"], ex));
+                        break;
+                    }
+                }
             }
             else
             {
