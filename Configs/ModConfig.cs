@@ -55,7 +55,13 @@ namespace ShopMasterExtreme.Configs
                         ModConfigAPI.SafeAddOnOptionsChangedDelegate(OnOptionChanged);
 
                         ShopStackManager.restockAmount = ModConfigAPI.SafeLoad("ShopMasterExtreme", "RestockAmount", 99);
-                        Localization.ManualLanguage = ModConfigAPI.SafeLoad("ShopMasterExtreme", "Language", "Auto");
+                        string savedLanguage = ModConfigAPI.SafeLoad("ShopMasterExtreme", "Language", "Auto");
+                        if (savedLanguage != Localization.ManualLanguage)
+                        {
+                            Localization.ManualLanguage = savedLanguage;
+                            Localization.TryUnloadLocallization();
+                            Localization.TryLoadLocalization();
+                        }
                         Loger.Log(string.Format(Localization.Lang["Log_RestockAmount"], ShopStackManager.restockAmount));
                         ModConfigReday = true;
                     }
@@ -70,7 +76,6 @@ namespace ShopMasterExtreme.Configs
             else
             {
                 Loger.LogWarning(string.Format(Localization.Lang["Log_NoModConfig"]));
-                ModConfigReday = true;
             }
         }
 
@@ -106,6 +111,8 @@ namespace ShopMasterExtreme.Configs
         {
             if (ModConfigAPI.IsAvailable())
             {
+                if (!ModConfigReday)
+                    return;
                 ModConfigAPI.SafeSave("ShopMasterExtreme", "RestockAmount", ShopStackManager.restockAmount);
                 Loger.Log(string.Format(Localization.Lang["Log_ConfigSaved"], ShopStackManager.restockAmount));
             }

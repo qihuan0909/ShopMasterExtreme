@@ -7,7 +7,9 @@ namespace ShopMasterExtreme
 {
     public static class Loger
     {
-        internal static bool ShowLog = false;
+        internal static bool ShowLog = true;
+        internal static bool ShowWarn = true;
+        internal static bool ShowError = true;
         internal static void Log(string word)
         {
             if (ShowLog)
@@ -18,7 +20,7 @@ namespace ShopMasterExtreme
 
         internal static void LogWarning(string word)
         {
-            if (ShowLog)
+            if (ShowWarn)
             {
                 Debug.LogWarning(word);
             }
@@ -26,7 +28,7 @@ namespace ShopMasterExtreme
 
         internal static void LogError(string word)
         {
-            if (ShowLog)
+            if (ShowError)
             {
                 Debug.LogError(word);
             }

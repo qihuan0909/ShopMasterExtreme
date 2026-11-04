@@ -36,6 +36,14 @@ namespace ShopMasterExtreme.Configs
                         {
                             bool.TryParse(line.Substring("Loger.ShowLog=".Length).Trim(), out Loger.ShowLog);
                         }
+                        else if (line.StartsWith("Loger.ShowWarn=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            bool.TryParse(line.Substring("Loger.ShowWarn=".Length).Trim(), out Loger.ShowWarn);
+                        }
+                        else if (line.StartsWith("Loger.ShowError=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            bool.TryParse(line.Substring("Loger.ShowError=".Length).Trim(), out Loger.ShowError);
+                        }
                         else if (line.StartsWith("ShowAllItems=", StringComparison.OrdinalIgnoreCase))
                         {
                             bool.TryParse(line.Substring("ShowAllItems=".Length).Trim(), out ShopStackManager.showAllItems);
@@ -64,6 +72,8 @@ namespace ShopMasterExtreme.Configs
                 string content = $"# ShopMasterExtreme Configuration\n" +
                                  $"ToggleKey={keyCode}\n" +
                                  $"Loger.ShowLog={Loger.ShowLog}\n" +
+                                 $"Loger.ShowWarn={Loger.ShowWarn}\n" +
+                                 $"Loger.ShowError={Loger.ShowError}\n" +
                                  $"ShowAllItems={ShopStackManager.showAllItems}\n";
                 System.IO.File.WriteAllText(configPath, content);
                 Loger.Log(string.Format(Localization.Lang["Log_ConfigWriteInfo"], keyCode, Loger.ShowLog, ShopStackManager.showAllItems));

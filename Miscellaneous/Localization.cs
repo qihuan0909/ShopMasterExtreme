@@ -9,7 +9,7 @@ namespace ShopMasterExtreme
     {
         internal static string ManualLanguage = "Auto";
         internal static bool LocalizationLoaded = false;
-        internal static Dictionary<string, string> Lang = new Dictionary<string, string>();
+        internal static LangTable Lang = new LangTable();
 
         internal static void TryLoadLocalization()
         {
@@ -68,7 +68,7 @@ namespace ShopMasterExtreme
                 }
                 catch (Exception ex)
                 {
-                    Loger.LogWarning($"[ShopMasterExtreme] Language init error: {ex.Message}");
+                    Loger.LogError($"[ShopMasterExtreme] Language init error: {ex.Message}");
                     TryUnloadLocallization();
                     break;
                 }
@@ -553,6 +553,23 @@ namespace ShopMasterExtreme
             {
                 Loger.LogWarning($"[ShopMasterExtreme] Language unload error: {ex.Message}");
             }
+        }
+    }
+
+    // 找不到的键直接返回键名，语言加载失败时日志和界面也不会抛 KeyNotFoundException
+    internal class LangTable
+    {
+        private readonly Dictionary<string, string> table = new Dictionary<string, string>();
+
+        internal string this[string key]
+        {
+            get => table.TryGetValue(key, out string value) ? value : key;
+            set => table[key] = value;
+        }
+
+        internal void Clear()
+        {
+            table.Clear();
         }
     }
 }

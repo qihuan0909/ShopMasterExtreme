@@ -30,10 +30,18 @@ namespace ShopMasterExtreme
 
         private void Start()
         {
-            Localization.TryLoadLocalization();
-            Miscellaneous.Harmony.TryPatch();
-            ModConfig.TrySetConfig();
-            Config.TryLoadConfig();
+            try
+            {
+                Localization.TryLoadLocalization();
+                Miscellaneous.Harmony.TryPatch();
+                ModConfig.TrySetConfig();
+                Config.TryLoadConfig();
+            }
+            catch (Exception ex)
+            {
+                Loger.LogError($"An error occurred during startup: {ex}");
+                enabled = false;
+            }
         }
 
         private void OnGUI()

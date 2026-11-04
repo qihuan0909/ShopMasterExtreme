@@ -178,33 +178,39 @@ namespace ShopMasterExtreme.Functions
         {
             buyButton.interactable = false;
 
+            // 循环中有 await，期间玩家可能切换选中商品并改写这些静态字段，所以先固定下来
+            StockShop shop = activeShop;
+            StockShop.Entry entry = currentSelectionEntry;
+            int quantity = currentInputValue;
+            int unitPrice = currentUnitPrice;
+
             try
             {
-                long totalPrice = (long)currentUnitPrice * currentInputValue;
+                long totalPrice = (long)unitPrice * quantity;
                 Cost totalCost = new Cost(totalPrice);
 
-                if (currentSelectionEntry.CurrentStock < currentInputValue)
+                if (entry.CurrentStock < quantity)
                 {
                     NotificationText.Push(string.Format(Localization.Lang["BulkPurchaseNotification1"]));
                     Loger.Log(string.Format(Localization.Lang["BulkPurchase4"]));
                     return;
                 }
 
-                if (!EconomyManager.IsEnough(totalCost, activeShop.AccountAvaliable, true))
+                if (!EconomyManager.IsEnough(totalCost, shop.AccountAvaliable, true))
                 {
                     NotificationText.Push(string.Format(Localization.Lang["BulkPurchaseNotification2"]));
                     Loger.Log(string.Format(Localization.Lang["BulkPurchase5"]));
                     return;
                 }
 
-                EconomyManager.Pay(totalCost, activeShop.AccountAvaliable, true);
+                EconomyManager.Pay(totalCost, shop.AccountAvaliable, true);
 
-                currentSelectionEntry.CurrentStock -= currentInputValue;
+                entry.CurrentStock -= quantity;
 
                 Item? lastItem = null;
-                for (int i = 0; i < currentInputValue; i++)
+                for (int i = 0; i < quantity; i++)
                 {
-                    Item item = await ItemAssetsCollection.InstantiateAsync(currentSelectionEntry.ItemTypeID);
+                    Item item = await ItemAssetsCollection.InstantiateAsync(entry.ItemTypeID);
                     lastItem = item;
 
                     if (!ItemUtilities.SendToPlayerCharacterInventory(item, false))
@@ -216,8 +222,8 @@ namespace ShopMasterExtreme.Functions
 
                 if (lastItem != null)
                 {
-                    NotificationText.Push(string.Format(Localization.Lang["BulkPurchaseNotification3"], currentInputValue, lastItem.DisplayName));
-                    Loger.Log(string.Format(Localization.Lang["BulkPurchase6"], currentInputValue, lastItem.DisplayName));
+                    NotificationText.Push(string.Format(Localization.Lang["BulkPurchaseNotification3"], quantity, lastItem.DisplayName));
+                    Loger.Log(string.Format(Localization.Lang["BulkPurchase6"], quantity, lastItem.DisplayName));
                     AudioManager.Post("UI/buy");
                 }
 

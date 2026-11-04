@@ -61,7 +61,7 @@ namespace ShopMasterExtreme.Miscellaneous
             }
             catch (Exception ex)
             {
-                Loger.LogError(string.Format(Localization.Lang["Log_UnpatchError"], ex)); ;
+                Loger.LogError(string.Format(Localization.Lang["Log_UnpatchError"], ex));
             }
         }
     }
